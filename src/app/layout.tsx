@@ -5,6 +5,8 @@ import { ClientHeader } from "@/components/layout/ClientHeader";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
+import { CompareProvider } from "@/contexts/CompareContext";
 
 const exo2 = Exo_2({
   variable: "--font-exo2",
@@ -86,6 +88,7 @@ import { OrganizationSchema, WebsiteSchema, LocalBusinessSchema } from "@/compon
 import { Analytics } from "@/components/analytics/Analytics";
 import { CookieBanner } from "@/components/gdpr/CookieBanner";
 import { ToastProvider } from "@/components/ui/toast";
+import { CompareDrawer, CompareFloatingButton } from "@/components/compare";
 
 export default function RootLayout({
   children,
@@ -109,16 +112,22 @@ export default function RootLayout({
       <body className={`${exo2.variable} font-sans antialiased bg-[#0a0a0a] text-[#e0e0e0]`} suppressHydrationWarning>
         <ToastProvider>
           <AuthProvider>
-            <CartProvider>
-              <div className="flex flex-col min-h-screen">
-                <ClientHeader />
-                <main className="flex-1">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-              <CookieBanner />
-            </CartProvider>
+            <WishlistProvider>
+              <CompareProvider>
+                <CartProvider>
+                  <div className="flex flex-col min-h-screen">
+                    <ClientHeader />
+                    <main className="flex-1">
+                      {children}
+                    </main>
+                    <Footer />
+                  </div>
+                  <CookieBanner />
+                  <CompareDrawer />
+                  <CompareFloatingButton />
+                </CartProvider>
+              </CompareProvider>
+            </WishlistProvider>
           </AuthProvider>
         </ToastProvider>
         <Analytics />

@@ -13,7 +13,8 @@ import {
   Bike,
   Waves,
   Snowflake,
-  Phone
+  Phone,
+  Heart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 
 // Catégories de véhicules avec IDs PrestaShop
@@ -76,6 +78,7 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const { itemCount, openCart } = useCart();
   const { customer, isAuthenticated, logout } = useAuth();
+  const { count: wishlistCount } = useWishlist();
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -194,6 +197,9 @@ export function Header() {
                     <DropdownMenuItem asChild className="hover:bg-white/5 focus:bg-white/5">
                       <Link href="/compte/adresses">Mes adresses</Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="hover:bg-white/5 focus:bg-white/5">
+                      <Link href="/compte/favoris">Mes favoris</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-white/10" />
                     <DropdownMenuItem 
                       onClick={logout}
@@ -214,6 +220,24 @@ export function Header() {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Wishlist */}
+            {isAuthenticated && (
+              <Link href="/compte/favoris">
+                <Button 
+                  variant="ghost" 
+                  className="relative text-[#999] hover:text-red-500 hover:bg-white/5"
+                  size="icon"
+                >
+                  <Heart className="h-5 w-5" />
+                  {wishlistCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-white text-xs font-bold">
+                      {wishlistCount > 99 ? '99+' : wishlistCount}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
+            )}
 
             {/* Cart */}
             <Button 

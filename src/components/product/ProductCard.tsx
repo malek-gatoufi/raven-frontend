@@ -2,9 +2,11 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Heart, Eye, Package } from 'lucide-react';
+import { ShoppingCart, Eye, Package, Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import { useCompare } from '@/contexts/CompareContext';
+import { WishlistButton } from './WishlistButton';
 import { formatPrice } from '@/lib/utils';
 import type { Product } from '@/types/prestashop';
 import { cn } from '@/lib/utils';
@@ -16,9 +18,11 @@ interface ProductCardProps {
 
 export function ProductCard({ product, className }: ProductCardProps) {
   const { addItem, isLoading } = useCart();
+  const { toggleCompare, isInCompare, canAddMore } = useCompare();
 
   const hasReduction = product.reduction > 0;
   const isOutOfStock = product.quantity <= 0;
+  const inCompare = isInCompare(product.id);
 
   async function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault();
@@ -72,11 +76,26 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
             {/* Quick actions */}
             <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-              <button className="h-10 w-10 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-[#44D92C] hover:text-black hover:border-[#44D92C] transition-all">
-                <Heart className="h-5 w-5" />
-              </button>
-              <button className="h-10 w-10 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-[#44D92C] hover:text-black hover:border-[#44D92C] transition-all">
-                <Eye className="h-5 w-5" />
+              <WishlistButton 
+                productId={product.id} 
+                size="md"
+                className="h-10 w-10 rounded-xl"
+              />
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleCompare(product);
+                }}
+                disabled={!inCompare && !canAddMore}
+                className={cn(
+                  "h-10 w-10 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all",
+                  inCompare ? "text-[#44D92C] border-[#44D92C] bg-[#44D92C]/20" : "text-white hover:bg-[#44D92C] hover:text-black hover:border-[#44D92C]",
+                  !inCompare && !canAddMore && "opacity-50 cursor-not-allowed"
+                )}
+                title={inCompare ? "Retirer du comparateur" : "Ajouter au comparateur"}
+              >
+                <Scale className="h-5 w-5" />
               </button>
             </div>
 

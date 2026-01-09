@@ -1,0 +1,29 @@
+# =============================================================================
+# Dockerfile de DÉVELOPPEMENT pour Next.js
+# =============================================================================
+
+FROM node:20-alpine
+
+# Installer les dépendances nécessaires
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package.json package-lock.json* ./
+
+# Installer toutes les dépendances (incluant devDependencies)
+RUN npm install
+
+# Copier le reste du code
+COPY . .
+
+# Variables d'environnement de développement
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Exposer le port
+EXPOSE 3000
+
+# Commande de démarrage en mode développement avec hot reload
+CMD ["npm", "run", "dev"]

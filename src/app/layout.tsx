@@ -89,6 +89,9 @@ import { Analytics } from "@/components/analytics/Analytics";
 import { CookieBanner } from "@/components/gdpr/CookieBanner";
 import { ToastProvider } from "@/components/ui/toast";
 import { CompareDrawer, CompareFloatingButton } from "@/components/compare";
+import { RecentlyViewedProvider } from "@/components/product/RecentlyViewed";
+import { QuickViewProvider } from "@/components/product/QuickViewModal";
+import { NewsletterPopup } from "@/components/newsletter";
 
 export default function RootLayout({
   children,
@@ -114,18 +117,22 @@ export default function RootLayout({
           <AuthProvider>
             <WishlistProvider>
               <CompareProvider>
-                <CartProvider>
-                  <div className="flex flex-col min-h-screen">
-                    <ClientHeader />
-                    <main className="flex-1">
-                      {children}
-                    </main>
-                    <Footer />
-                  </div>
-                  <CookieBanner />
-                  <CompareDrawer />
-                  <CompareFloatingButton />
-                </CartProvider>
+                <RecentlyViewedProvider>
+                  <CartProvider>
+                    <div className="flex flex-col min-h-screen">
+                      <ClientHeader />
+                      <main className="flex-1">
+                        {children}
+                      </main>
+                      <Footer />
+                    </div>
+                    <CookieBanner />
+                    <CompareDrawer />
+                    <CompareFloatingButton />
+                    <QuickViewProvider />
+                    <NewsletterPopup discountPercent={10} />
+                  </CartProvider>
+                </RecentlyViewedProvider>
               </CompareProvider>
             </WishlistProvider>
           </AuthProvider>

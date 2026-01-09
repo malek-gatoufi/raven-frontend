@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useCompare } from '@/contexts/CompareContext';
 import { WishlistButton } from './WishlistButton';
+import { useQuickView } from './QuickViewModal';
 import { formatPrice } from '@/lib/utils';
 import type { Product } from '@/types/prestashop';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,7 @@ interface ProductCardProps {
 export function ProductCard({ product, className }: ProductCardProps) {
   const { addItem, isLoading } = useCart();
   const { toggleCompare, isInCompare, canAddMore } = useCompare();
+  const openQuickView = useQuickView((state) => state.openQuickView);
 
   const hasReduction = product.reduction > 0;
   const isOutOfStock = product.quantity <= 0;
@@ -28,6 +30,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     await addItem(product.id);
+  }
+
+  function handleQuickView(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    openQuickView(product);
   }
 
   return (
@@ -81,6 +89,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 size="md"
                 className="h-10 w-10 rounded-xl"
               />
+              <button 
+                onClick={handleQuickView}
+                className="h-10 w-10 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-[#44D92C] hover:text-black hover:border-[#44D92C] transition-all"
+                title="Aperçu rapide"
+              >
+                <Eye className="h-5 w-5" />
+              </button>
               <button 
                 onClick={(e) => {
                   e.preventDefault();

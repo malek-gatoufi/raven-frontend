@@ -23,3 +23,7 @@ export {
   RecentlyViewedMini, 
   useRecentlyViewed 
 } from './RecentlyViewed';
+export { StickyAddToCart, AddToCartZone } from './StickyAddToCart';
+export { ProductImageZoom } from './ProductImageZoom';
+export { EnhancedProductTabs } from './EnhancedProductTabs';
+export type { Review } from './EnhancedProductTabs';

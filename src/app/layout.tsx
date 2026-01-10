@@ -7,6 +7,8 @@ import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CompareProvider } from "@/contexts/CompareContext";
+import CrispChat from "@/components/support/CrispChat";
+import FacebookPixel from "@/components/tracking/FacebookPixel";
 
 const exo2 = Exo_2({
   variable: "--font-exo2",
@@ -150,6 +152,8 @@ export default function RootLayout({
         </ToastProvider>
         <PWAInitializer />
         <InstallPrompt />
+        <CrispChat />
+        <FacebookPixel />
         <Analytics />
       </body>
     </html>

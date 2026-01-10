@@ -450,7 +450,11 @@ export const checkoutApi = {
   async validate(paymentModule: string, cgv: boolean): Promise<{order_reference: string; order_id: number}> {
     return fetchApi<{order_reference: string; order_id: number}>('checkout', {}, {
       method: 'POST',
-      body: JSON.stringify({ payment_module: paymentModule, cgv }),
+      body: JSON.stringify({ 
+        payment_module: paymentModule, 
+        cgv,
+        frontend_source: 'nextjs'
+      }),
     });
   },
 };

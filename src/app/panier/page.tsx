@@ -7,6 +7,7 @@ import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { CartSkeleton } from '@/components/ui/skeleton';
 import { 
   ShoppingCart, 
   Trash2, 
@@ -52,13 +53,8 @@ export default function CartPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-[#44D92C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-400">Chargement du panier...</p>
-          </div>
-        </div>
+      <div className="container mx-auto px-4 py-8">
+        <CartSkeleton />
       </div>
     );
   }

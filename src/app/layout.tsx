@@ -92,6 +92,8 @@ import { CompareDrawer, CompareFloatingButton } from "@/components/compare";
 import { RecentlyViewedProvider } from "@/components/product/RecentlyViewed";
 import { QuickViewProvider } from "@/components/product/QuickViewModal";
 import { NewsletterPopup } from "@/components/newsletter";
+import { PWAInitializer } from "@/components/pwa/PWAInitializer";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 export default function RootLayout({
   children,
@@ -105,12 +107,19 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=3" />
         <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
         <link rel="shortcut icon" href="/favicon.ico?v=3" />
+        
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#44D92C" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Raven Industries" />
+        
         <OrganizationSchema />
         <WebsiteSchema />
         <LocalBusinessSchema />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className={`${exo2.variable} font-sans antialiased bg-[#0a0a0a] text-[#e0e0e0]`} suppressHydrationWarning>
         <ToastProvider>
@@ -137,6 +146,8 @@ export default function RootLayout({
             </WishlistProvider>
           </AuthProvider>
         </ToastProvider>
+        <PWAInitializer />
+        <InstallPrompt />
         <Analytics />
       </body>
     </html>

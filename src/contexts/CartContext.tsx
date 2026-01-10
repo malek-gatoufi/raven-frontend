@@ -3,6 +3,7 @@
 import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { cartApi } from '@/lib/api';
 import { useToast } from '@/components/ui/toast';
+import { trackAddToCart, trackRemoveFromCart, trackViewCart } from '@/lib/analytics';
 import type { Cart, CartItem } from '@/types/prestashop';
 
 interface CartState {
@@ -87,6 +88,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const cart = await cartApi.addItem(productId, quantity, attributeId);
       dispatch({ type: 'SET_CART', payload: cart });
       dispatch({ type: 'OPEN_CART' });
+      
+      // Track GA4 - Trouver le produit ajouté
+      const addedProduct = cart?.items?.find(
+        p => p.id_product === productId && (!attributeId || p.id_product_attribute === attributeId)
+      );
+      if (addedProduct) {
+        trackAddToCart({
+          id: addedProduct.id_product.toString(),
+          name: addedProduct.name,
+          brand: 'Raven Industries',
+          category: '',
+          price: addedProduct.price || 0,
+          quantity: quantity,
+        });
+      }
+      
       toast?.success('Produit ajouté au panier');
     } catch (error) {
       console.error('Failed to add item:', error);
@@ -108,9 +125,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   async function removeItem(productId: number, attributeId?: number) {
     dispatch({ type: 'SET_LOADING', payload: true });
+    
+    // Récupérer le produit avant de le supprimer pour le tracking
+    const itemToRemove = state.cart?.items?.find(
+      p => p.id_product === productId && (!attributeId || p.id_product_attribute === attributeId)
+    );
+    
     try {
       const cart = await cartApi.removeItem(productId, attributeId);
       dispatch({ type: 'SET_CART', payload: cart });
+      
+      // Track GA4
+      if (itemToRemove) {
+        trackRemoveFromCart({
+          id: itemToRemove.id_product.toString(),
+          name: itemToRemove.name,
+          brand: 'Raven Industries',
+          category: '',
+          price: itemToRemove.price || 0,
+          quantity: itemToRemove.quantity,
+        });
+      }
+      
       toast?.success('Produit retiré du panier');
     } catch (error) {
       console.error('Failed to remove item:', error);

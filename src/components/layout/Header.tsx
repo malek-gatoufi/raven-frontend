@@ -31,6 +31,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { LiveSearch } from '@/components/search/LiveSearch';
 
 // Catégories de véhicules avec IDs PrestaShop
 const vehicleCategories = [
@@ -133,27 +134,14 @@ export function Header() {
           </Link>
 
           {/* Search bar - Desktop */}
-          <form 
-            onSubmit={handleSearch}
-            className="hidden lg:flex flex-1 max-w-xl mx-8"
-          >
-            <div className="relative w-full group">
-              <Input
-                type="search"
-                placeholder="Rechercher une pièce, une référence..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 pl-4 pr-12 bg-white/5 border-white/10 rounded-xl text-white placeholder:text-[#666] focus:border-[#44D92C] focus:ring-[#44D92C]/20 transition-all"
-              />
-              <Button 
-                type="submit"
-                size="icon" 
-                className="absolute right-1 top-1 h-10 w-10 bg-[#44D92C] hover:bg-[#3bc425] text-black rounded-lg"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          </form>
+          <div className="hidden lg:flex flex-1 max-w-xl mx-8">
+            <LiveSearch 
+              placeholder="Rechercher une pièce, une référence..."
+              debounceDelay={300}
+              minSearchLength={2}
+              maxResults={8}
+            />
+          </div>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
@@ -336,28 +324,14 @@ export function Header() {
 
         {/* Mobile search */}
         {isSearchOpen && (
-          <form 
-            onSubmit={handleSearch}
-            className="lg:hidden pb-4 animate-fade-in-up"
-          >
-            <div className="relative">
-              <Input
-                type="search"
-                placeholder="Rechercher une pièce..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-12 pl-4 pr-12 bg-white/5 border-white/10 rounded-xl text-white placeholder:text-[#666]"
-                autoFocus
-              />
-              <Button 
-                type="submit"
-                size="icon" 
-                className="absolute right-1 top-1 h-10 w-10 bg-[#44D92C] hover:bg-[#3bc425] text-black rounded-lg"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          </form>
+          <div className="lg:hidden pb-4 animate-fade-in-up">
+            <LiveSearch 
+              placeholder="Rechercher une pièce..."
+              debounceDelay={200}
+              minSearchLength={2}
+              maxResults={5}
+            />
+          </div>
         )}
       </div>
 

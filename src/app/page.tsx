@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { productsApi, categoriesApi } from '@/lib/api-direct';
 import { AddToCartButton } from '@/components/product/AddToCartButton';
+import { ProductGridSkeleton } from '@/components/ui/skeleton';
+import { ProductImage } from '@/components/ui/optimized-image';
 import type { Product, Category } from '@/types/prestashop';
+import { Suspense } from 'react';
 
 // Force le rendu dynamique à chaque requête
 export const dynamic = 'force-dynamic';
@@ -60,11 +63,12 @@ function ProductCard({ product }: { product: Product }) {
       <Link href={`/product/${product.id}-${product.link_rewrite}`}>
         <div className="relative aspect-square bg-white/5 overflow-hidden">
           {product.cover_image ? (
-            <Image
+            <ProductImage
               src={product.cover_image}
               alt={product.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              width={400}
+              height={400}
+              className="group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">

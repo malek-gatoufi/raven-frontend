@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import { WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { RetryButton } from './retry-button';
 
 export const metadata = {
   title: 'Hors ligne - Raven Industries',
@@ -31,12 +32,7 @@ export default function OfflinePage() {
         </p>
 
         <div className="space-y-4">
-          <Button
-            onClick={() => window.location.reload()}
-            className="w-full"
-          >
-            Réessayer
-          </Button>
+          <RetryButton />
 
           <Link href="/" className="block">
             <Button variant="outline" className="w-full">

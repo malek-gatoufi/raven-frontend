@@ -4,10 +4,13 @@ import Image from 'next/image';
 import { ChevronRight, Package, Grid3X3, List } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { productsApi, categoriesApi } from '@/lib/api-direct';
+import { ProductGridSkeleton } from '@/components/ui/skeleton';
+import { ProductImage, CategoryImage } from '@/components/ui/optimized-image';
 import type { Category } from '@/types/prestashop';
 import type { Metadata } from 'next';
 import { AddToCartButton } from '@/components/product/AddToCartButton';
 import { CategoryFacets } from './CategoryFacets';
+import { Suspense } from 'react';
 
 // Force le rendu dynamique à chaque requête
 export const dynamic = 'force-dynamic';
@@ -132,7 +135,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         <div className="flex items-center gap-4 mb-4">
           {category.image && (
             <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-white/5">
-              <Image src={category.image} alt={category.name} fill className="object-cover" />
+              <CategoryImage src={category.image} alt={category.name} width={64} height={64} />
             </div>
           )}
           <div>

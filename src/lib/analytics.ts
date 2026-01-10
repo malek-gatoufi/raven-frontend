@@ -59,8 +59,8 @@ export const initGA = (measurementId: string) => {
   window.gtag = function gtag() {
     window.dataLayer.push(arguments);
   };
-  window.gtag('js', new Date());
-  window.gtag('config', measurementId, {
+  (window.gtag as any)('js', new Date());
+  (window.gtag as any)('config', measurementId, {
     page_path: window.location.pathname,
     send_page_view: true,
   });

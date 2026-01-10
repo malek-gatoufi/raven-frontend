@@ -11,7 +11,7 @@ export function usePWA() {
     if (
       typeof window !== 'undefined' &&
       'serviceWorker' in navigator &&
-      window.workbox !== undefined
+      (window as any).workbox !== undefined
     ) {
       // Enregistrer le service worker
       navigator.serviceWorker

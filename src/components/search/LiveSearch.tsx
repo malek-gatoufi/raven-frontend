@@ -10,14 +10,6 @@ import { Search, X, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
 import { trackSearch } from '@/lib/analytics';
 
 interface SearchResult {
@@ -204,56 +196,58 @@ export function LiveSearch({
       {/* Résultats de recherche */}
       {isOpen && query.length >= minSearchLength && (
         <div className="absolute top-full z-50 mt-2 w-full rounded-md border bg-popover shadow-lg">
-          <Command>
-            <CommandList>
-              {results.length === 0 && !isLoading && (
-                <CommandEmpty>Aucun résultat trouvé</CommandEmpty>
-              )}
+          <div className="max-h-[400px] overflow-y-auto">
+            {results.length === 0 && !isLoading && (
+              <div className="p-4 text-center text-sm text-muted-foreground">
+                Aucun résultat trouvé
+              </div>
+            )}
 
-              {results.length > 0 && (
-                <CommandGroup heading="Produits">
-                  {results.map((result) => (
-                    <CommandItem
-                      key={result.id}
-                      value={result.name}
-                      onSelect={() => handleSelectResult(result)}
-                      className="flex items-center gap-3 p-3"
-                    >
-                      <img
-                        src={result.image}
-                        alt={result.name}
-                        className="h-12 w-12 rounded-md object-cover"
-                      />
-                      <div className="flex-1">
-                        <div className="font-medium">{result.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          Réf: {result.reference}
-                        </div>
-                      </div>
-                      <div className="font-semibold">
-                        {result.price.toFixed(2)} €
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-
-              {results.length > 0 && (
-                <div className="border-t p-2">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    onClick={() => {
-                      setIsOpen(false);
-                      router.push(`/recherche?q=${encodeURIComponent(query)}`);
-                    }}
-                  >
-                    Voir tous les résultats pour &quot;{query}&quot;
-                  </Button>
+            {results.length > 0 && (
+              <div className="p-2">
+                <div className="mb-2 px-2 text-xs font-semibold text-muted-foreground">
+                  Produits
                 </div>
-              )}
-            </CommandList>
-          </Command>
+                {results.map((result) => (
+                  <button
+                    key={result.id}
+                    onClick={() => handleSelectResult(result)}
+                    className="flex w-full items-center gap-3 rounded-md p-3 hover:bg-accent"
+                  >
+                    <img
+                      src={result.image}
+                      alt={result.name}
+                      className="h-12 w-12 rounded-md object-cover"
+                    />
+                    <div className="flex-1 text-left">
+                      <div className="font-medium">{result.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Réf: {result.reference}
+                      </div>
+                    </div>
+                    <div className="font-semibold">
+                      {result.price.toFixed(2)} €
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {results.length > 0 && (
+              <div className="border-t p-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push(`/recherche?q=${encodeURIComponent(query)}`);
+                  }}
+                >
+                  Voir tous les résultats pour &quot;{query}&quot;
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

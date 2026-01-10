@@ -64,15 +64,25 @@ export function ProductCard({ product, className }: ProductCardProps) {
             {/* Badges */}
             <div className="absolute top-3 left-3 flex flex-col gap-2">
               {hasReduction && (
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#44D92C] text-black">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#44D92C] text-black shadow-lg">
                   -{product.reduction_type === 'percentage' 
                     ? `${product.reduction}%` 
                     : formatPrice(product.reduction)}
                 </span>
               )}
               {product.on_sale && !hasReduction && (
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#44D92C] text-black">
-                  PROMO
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#44D92C] text-black shadow-lg">
+                  🔥 PROMO
+                </span>
+              )}
+              {!isOutOfStock && product.quantity <= 5 && (
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-500 text-white shadow-lg animate-pulse">
+                  ⚡ Dernières pièces
+                </span>
+              )}
+              {!isOutOfStock && product.quantity > 5 && (
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                  ✓ EN STOCK
                 </span>
               )}
               {isOutOfStock && (
@@ -152,17 +162,17 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
             {/* Price */}
             <div className="flex items-center gap-3 mt-3">
+              {hasReduction && (
+                <span className="text-sm text-[#666] line-through order-2">
+                  {formatPrice(product.price_without_reduction)}
+                </span>
+              )}
               <span className={cn(
-                'font-bold text-xl',
+                'font-bold text-xl order-1',
                 hasReduction ? 'text-[#44D92C]' : 'text-white'
               )}>
                 {formatPrice(product.price)}
               </span>
-              {hasReduction && (
-                <span className="text-sm text-[#666] line-through">
-                  {formatPrice(product.price_without_reduction)}
-                </span>
-              )}
             </div>
 
             {/* Stock status */}

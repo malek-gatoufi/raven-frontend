@@ -5,11 +5,16 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://www.ravenindustries.
 
 interface Product {
   id: number;
+  link_rewrite?: string;
+  date_upd?: string;
+  date_add?: string;
 }
 
 interface Category {
   id: number;
   slug: string;
+  id_category?: number;
+  link_rewrite?: string;
 }
 
 interface Manufacturer {

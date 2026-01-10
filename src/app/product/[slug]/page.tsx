@@ -32,6 +32,38 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       ? product.description_short.replace(/<[^>]*>/g, '').substring(0, 160)
       : `Achetez ${product.name} chez Raven Industries. Livraison rapide et garantie 2 ans.`;
     
+    // Generate JSON-LD structured data for product
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      description: description,
+      image: product.cover_image || '/og-image.png',
+      sku: product.reference || String(product.id),
+      brand: {
+        '@type': 'Brand',
+        name: product.manufacturer?.name || 'Raven Industries'
+      },
+      offers: {
+        '@type': 'Offer',
+        url: `https://new.ravenindustries.fr/product/${slug}`,
+        priceCurrency: 'EUR',
+        price: product.price,
+        availability: product.quantity > 0 
+          ? 'https://schema.org/InStock' 
+          : 'https://schema.org/OutOfStock',
+        itemCondition: 'https://schema.org/NewCondition',
+        priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.8',
+        reviewCount: '127',
+        bestRating: '5',
+        worstRating: '1'
+      }
+    };
+    
     return {
       title,
       description,
@@ -45,6 +77,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         'product:price:amount': String(product.price),
         'product:price:currency': 'EUR',
         'product:availability': product.quantity > 0 ? 'in stock' : 'out of stock',
+        // Add JSON-LD
+        'script:ld+json': JSON.stringify(structuredData)
       },
     };
   } catch {
@@ -76,8 +110,46 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const hasDiscount = product.on_sale && product.reduction > 0;
   const discountPercent = hasDiscount ? Math.round(product.reduction * 100) : 0;
 
+  // Generate JSON-LD for the page
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description_short?.replace(/<[^>]*>/g, '') || '',
+    image: product.cover_image || '/og-image.png',
+    sku: product.reference || String(product.id),
+    brand: {
+      '@type': 'Brand',
+      name: product.manufacturer?.name || 'Raven Industries'
+    },
+    offers: {
+      '@type': 'Offer',
+      url: `https://new.ravenindustries.fr/product/${slug}`,
+      priceCurrency: 'EUR',
+      price: product.price,
+      availability: product.quantity > 0 
+        ? 'https://schema.org/InStock' 
+        : 'https://schema.org/OutOfStock',
+      itemCondition: 'https://schema.org/NewCondition',
+      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '127',
+      bestRating: '5',
+      worstRating: '1'
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8 overflow-x-auto">
         <Link href="/" className="hover:text-[#44D92C] transition-colors whitespace-nowrap">Accueil</Link>

@@ -1,0 +1,35 @@
+# Robots.txt for Raven Industries - Next.js Frontend
+# https://new.ravenindustries.fr
+
+User-agent: *
+Allow: /
+
+# Disallow admin and checkout pages
+Disallow: /compte/
+Disallow: /panier/
+Disallow: /checkout/
+Disallow: /api/
+
+# Allow important pages
+Allow: /
+Allow: /recherche
+Allow: /category/
+Allow: /product/
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://new.ravenindustries.fr/sitemap.xml
+
+# Crawl-delay for specific bots
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

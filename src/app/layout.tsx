@@ -92,6 +92,7 @@ import { CompareDrawer, CompareFloatingButton } from "@/components/compare";
 import { RecentlyViewedProvider } from "@/components/product/RecentlyViewed";
 import { QuickViewProvider } from "@/components/product/QuickViewModal";
 import { NewsletterPopup } from "@/components/newsletter";
+import { NewsletterPopup as WelcomePopup } from "@/components/marketing/NewsletterPopup";
 import { PWAInitializer } from "@/components/pwa/PWAInitializer";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
@@ -140,6 +141,7 @@ export default function RootLayout({
                     <CompareFloatingButton />
                     <QuickViewProvider />
                     <NewsletterPopup discountPercent={10} />
+                    <WelcomePopup />
                   </CartProvider>
                 </RecentlyViewedProvider>
               </CompareProvider>

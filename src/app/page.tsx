@@ -7,6 +7,7 @@ import { productsApi, categoriesApi } from '@/lib/api-direct';
 import { AddToCartButton } from '@/components/product/AddToCartButton';
 import { ProductGridSkeleton } from '@/components/ui/skeleton';
 import { ProductImage } from '@/components/ui/optimized-image';
+import { CustomerReviews } from '@/components/marketing/CustomerReviews';
 import type { Product, Category } from '@/types/prestashop';
 import { Suspense } from 'react';
 
@@ -365,6 +366,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Customer Reviews */}
+      <CustomerReviews />
 
       {/* CTA Section */}
       <section className="py-16 md:py-24">

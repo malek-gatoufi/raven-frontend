@@ -6,6 +6,8 @@ import { productsApi } from '@/lib/api-direct';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductActions } from '@/components/product/ProductActions';
 import { ProductTabs } from '@/components/product/ProductTabs';
+import { RelatedProducts } from '@/components/product/RelatedProducts';
+import { CountdownTimer } from '@/components/ui/CountdownTimer';
 import type { Metadata } from 'next';
 
 // Force le rendu dynamique à chaque requête
@@ -109,6 +111,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const hasDiscount = product.on_sale && product.reduction > 0;
   const discountPercent = hasDiscount ? Math.round(product.reduction * 100) : 0;
+  
+  // Promo ends in 48 hours (example - should come from database)
+  const promoEndDate = hasDiscount ? new Date(Date.now() + 48 * 60 * 60 * 1000) : null;
 
   // Generate JSON-LD for the page
   const structuredData = {
@@ -151,21 +156,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
       
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8 overflow-x-auto">
-        <Link href="/" className="hover:text-[#44D92C] transition-colors whitespace-nowrap">Accueil</Link>
+      <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8 overflow-x-auto" itemScope itemType="https://schema.org/BreadcrumbList">
+        <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+          <Link href="/" itemProp="item" className="hover:text-[#44D92C] transition-colors whitespace-nowrap">
+            <span itemProp="name">Accueil</span>
+          </Link>
+          <meta itemProp="position" content="1" />
+        </span>
         <ChevronRight className="h-4 w-4 flex-shrink-0" />
         {product.categories && product.categories[0] && (
           <>
-            <Link 
-              href={`/category/${product.categories[0].id}-${product.categories[0].link_rewrite}`}
-              className="hover:text-[#44D92C] transition-colors whitespace-nowrap"
-            >
-              {product.categories[0].name}
-            </Link>
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <Link 
+                href={`/category/${product.categories[0].id}-${product.categories[0].link_rewrite}`}
+                itemProp="item"
+                className="hover:text-[#44D92C] transition-colors whitespace-nowrap"
+              >
+                <span itemProp="name">{product.categories[0].name}</span>
+              </Link>
+              <meta itemProp="position" content="2" />
+            </span>
             <ChevronRight className="h-4 w-4 flex-shrink-0" />
           </>
         )}
-        <span className="text-white font-medium truncate">{product.name}</span>
+        <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+          <span itemProp="item" className="text-white font-medium truncate">
+            <span itemProp="name">{product.name}</span>
+          </span>
+          <meta itemProp="position" content="3" />
+        </span>
       </nav>
 
       {/* Product main section */}
@@ -209,6 +228,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <p className="text-xl text-gray-500 line-through">{formatPrice(product.price_without_reduction)}</p>
             )}
           </div>
+          
+          {/* Countdown Timer for promotions */}
+          {hasDiscount && promoEndDate && (
+            <CountdownTimer endDate={promoEndDate} />
+          )}
 
           {/* Stock */}
           <div className="flex items-center gap-3">
@@ -270,6 +294,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       {/* Tabs: Description, Features, Attachments */}
       <ProductTabs product={product} />
+      
+      {/* Related Products / Cross-sell */}
+      <RelatedProducts 
+        currentProduct={product}
+        categoryId={product.categories?.[0]?.id}
+      />
     </div>
   );
 }

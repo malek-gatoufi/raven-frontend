@@ -161,7 +161,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {/* Short description */}
           {product.description_short && (
             <div 
-              className="text-gray-300 prose prose-invert prose-sm max-w-none"
+              className="text-gray-300 prose prose-invert prose-sm max-w-none whitespace-pre-line"
               dangerouslySetInnerHTML={{ __html: product.description_short }}
             />
           )}
